@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객 문의 양식</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .left-content {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .right-content {
+            flex: 1.5;
+            min-width: 300px;
+        }
+        
+        header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        .operating-hours {
+            margin: 30px 0;
+        }
+        
+        .operating-hours h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .operating-hours p {
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .phone-button, .kakao-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .phone-button {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .kakao-button {
+            background-color: #FFE500;
+            color: #3C1E1E;
+            border: none;
+        }
+        
+        .phone-button:hover, .kakao-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .phone-button svg, .kakao-button svg {
+            margin-right: 8px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .privacy-box {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .submit-button {
+            width: 100%;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 5px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .option-item label {
+            margin-bottom: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        /* 서비스 종류 콤보박스 스타일링 */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px !important;
+        }
+
+        /* IE 10+ 화살표 제거 */
+        select::-ms-expand {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .left-content, .right-content {
+                width: 100%;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .options-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="left-content">
+                <header>
+                    <h1>문의하기</h1>
+                </header>
+                
+                <div class="description">
+                    전화를 통해 상담예약을 하셔도 좋지만,<br>
+                    온종 분부 기재 및 체크하시고 문의하기 해주시면 빠르게 확인하여<br>
+                    담당자를 통해서 더욱 원활한 상담해드리겠습니다.<br>
+                    카카오톡 실시간 상담 가능합니다! 카카오톡 버튼을 클릭해주세요.
+                </div>
+                
+                <div class="operating-hours">
+                    <h3>운영시간</h3>
+                    <p>전화상담 - 07:00~24:00</p>
+                    <p>카카오톡상담 - 07:00~24:00 (연중무휴)</p>
+                    <p>홈페이지 문의하기 - 24시간 (연중무휴)</p>
+                </div>
+                
+                <div class="contact-buttons">
+                    <a href="tel:010-2118-9678" class="phone-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                        </svg>
+                        전화상담 010-2118-9678
+                    </a>
+                    <a href="#" class="kakao-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 2.796 0 6.25c0 2.217 1.477 4.152 3.686 5.284a19.37 19.37 0 0 1-.305 1.715c-.046.208.086.384.298.309.544-.193 1.848-.693 2.56-1.003A9.981 9.981 0 0 0 8 12.5c4.42 0 8-2.796 8-6.25S12.42 0 8 0z"/>
+                        </svg>
+                        카카오톡 상담
+                    </a>
+                </div>
+            </div>
+            
+            <div class="right-content">
+                <div class="form-container">
+                    <form id="inquiryForm" autocomplete="off">
+                        <div class="form-group" id="nameField">
+                            <label for="name" id="nameLabel">이름</label>
+                            <input type="text" id="name" name="name" autocomplete="off">
+                        </div>
+                        
+                        <div class="form-group" id="phoneField">
+                            <label for="phone" id="phoneLabel">연락처</label>
+                            <input type="tel" id="phone" name="phone" placeholder="'-'(하이폰)을 빼고 입력해주세요" autocomplete="off">
+                        </div>
+                        
+                        <div class="form-group" id="addressField">
+                            <label for="address" id="addressLabel">주소</label>
+                            <input type="text" id="address" name="address" placeholder="클릭하여 주소를 검색하세요" readonly style="cursor: pointer;" autocomplete="off">
+                            <div id="addressContainer" style="display: none; width: 100%; height: 300px; margin-top: 10px; margin-bottom: 10px; border: 1px solid #ddd;"></div>
+                        </div>
+                        
+                        <div class="form-group" id="addressDetailField">
+                            <label for="addressDetail" id="addressDetailLabel">상세주소</label>
+                            <input type="text" id="addressDetail" name="addressDetail" placeholder="상세주소를 입력해주세요" autocomplete="off">
+                        </div>
+                        
+                        <div class="form-group" id="optionsField">
+                            <label id="optionsLabel">옵션 선택</label>
+                            <div class="options-container">
+                                <div class="option-item">
+                                    <input type="checkbox" id="option1" name="options[]" value="옵션1" autocomplete="off">
+                                    <label for="option1">옵션1</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option2" name="options[]" value="옵션2" autocomplete="off">
+                                    <label for="option2">옵션2</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option3" name="options[]" value="옵션3" autocomplete="off">
+                                    <label for="option3">옵션3</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option4" name="options[]" value="옵션4" autocomplete="off">
+                                    <label for="option4">옵션4</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option5" name="options[]" value="옵션5" autocomplete="off">
+                                    <label for="option5">옵션5</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option6" name="options[]" value="옵션6" autocomplete="off">
+                                    <label for="option6">옵션6</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option7" name="options[]" value="옵션7" autocomplete="off">
+                                    <label for="option7">옵션7</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="option8" name="options[]" value="옵션8" autocomplete="off">
+                                    <label for="option8">옵션8</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="optionEtc" name="options[]" value="기타" autocomplete="off">
+                                    <label for="optionEtc">기타</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="serviceTypeField">
+                            <label for="serviceType" id="serviceTypeLabel">서비스 종류</label>
+                            <select id="serviceType" name="serviceType" autocomplete="off">
+                                <option value="" disabled selected>서비스를 선택해주세요</option>
+                                <option value="customer">고객 지원</option>
+                                <option value="technical">기술 지원</option>
+                                <option value="sales">제품 문의</option>
+                                <option value="partnership">제휴 문의</option>
+                                <option value="other">기타</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="contentField">
+                            <label for="content" id="contentLabel">문의 내용</label>
+                            <textarea id="content" name="content" placeholder="궁금한 점이나 문의사항을 자유롭게 작성해주세요" autocomplete="off"></textarea>
+                        </div>
+                        
+                        <div id="privacyPolicySection" class="privacy-policy-section" style="display: none; margin-bottom: 20px;">
+                            <div class="form-container" style="background-color: #f8f9fa; padding: 20px; border-radius: 4px; margin-top: 10px;">
+                                <h3 style="margin-bottom: 15px; font-size: 16px; color: #2c3e50;">개인정보 처리방침</h3>
+                                <div style="max-height: 200px; overflow-y: auto; font-size: 14px; line-height: 1.5; color: #666;">
+                                    <p><strong>1. 개인정보의 수집 및 이용 목적</strong></p>
+                                    <p>회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
+                                    <ul style="margin-left: 20px; margin-top: 5px; margin-bottom: 10px;">
+                                        <li>고객 문의 접수 및 처리</li>
+                                        <li>서비스 제공 및 계약 이행</li>
+                                        <li>서비스 개선 및 개발</li>
+                                    </ul>
+                                    
+                                    <p><strong>2. 수집하는 개인정보 항목</strong></p>
+                                    <p>회사는 서비스 제공 및 문의 응대를 위해 아래와 같은 개인정보를 수집합니다.</p>
+                                    <ul style="margin-left: 20px; margin-top: 5px; margin-bottom: 10px;">
+                                        <li>필수항목: 이름, 연락처, 주소</li>
+                                        <li>선택항목: 상세주소, 서비스 종류, 문의 내용</li>
+                                    </ul>
+                                    
+                                    <p><strong>3. 개인정보의 보유 및 이용기간</strong></p>
+                                    <p>회사는 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다. 단, 관계법령의 규정에 의하여 보존할 필요가 있는 경우 회사는 아래와 같이 관계법령에서 정한 일정한 기간 동안 개인정보를 보관합니다.</p>
+                                    <ul style="margin-left: 20px; margin-top: 5px; margin-bottom: 10px;">
+                                        <li>소비자의 불만 또는 분쟁처리에 관한 기록: 3년 (전자상거래 등에서의 소비자 보호에 관한 법률)</li>
+                                        <li>계약 또는 청약철회 등에 관한 기록: 5년 (전자상거래 등에서의 소비자 보호에 관한 법률)</li>
+                                    </ul>
+                                    
+                                    <p><strong>4. 개인정보의 파기절차 및 방법</strong></p>
+                                    <p>회사는 개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체없이 해당 개인정보를 파기합니다. 파기절차 및 방법은 다음과 같습니다.</p>
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>파기절차: 불필요한 개인정보는 개인정보 관리책임자의 승인 하에 파기합니다.</li>
+                                        <li>파기방법: 전자적 파일 형태로 저장된 개인정보는 기록을 재생할 수 없는 기술적 방법을 사용하여 삭제합니다.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="privacy-box">
+                            이 양식을 제출함으로써 <a href="#" id="privacyPolicyLink">개인정보 처리방침</a>에 동의하게 됩니다.
+                            <br>별표(*)가 표시된 필드는 필수 항목입니다.
+                        </div>
+                        
+                        <div class="checkbox-group" id="privacyAgreementField">
+                            <input type="checkbox" id="privacyAgreement" name="privacyAgreement" autocomplete="off">
+                            <label for="privacyAgreement" id="privacyAgreementLabel">개인정보 수집 및 이용에 동의합니다</label>
+                        </div>
+                        
+                        <button type="submit" class="submit-button">문의하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 고객센터 | 문의 전화: 02-123-4567 | 이메일: support@example.com</p>
+        </footer>
+    </div>
+    
+    <!-- 카카오 우편번호 서비스 스크립트 -->
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        // 각 필드 노출 설정 (true: 표시, false: 숨김)
+        const fieldSettings = {
+            nameField: true,            // 이름 필드
+            phoneField: true,           // 연락처 필드
+            addressField: true,         // 주소 필드
+            addressDetailField: true,   // 상세주소 필드
+            optionsField: true,         // 옵션 선택 필드
+            serviceTypeField: true,     // 서비스 종류 필드
+            contentField: true,         // 문의 내용 필드
+            privacyAgreementField: true // 개인정보 동의 필드
+        };
+        
+        // 각 필드 필수 여부 설정 (true: 필수, false: 선택)
+        const requiredSettings = {
+            nameField: true,            // 이름 필드
+            phoneField: true,           // 연락처 필드
+            addressField: true,         // 주소 필드
+            addressDetailField: false,  // 상세주소 필드
+            optionsField: false,        // 옵션 선택 필드
+            serviceTypeField: true,     // 서비스 종류 필드
+            contentField: true,         // 문의 내용 필드
+            privacyAgreementField: true // 개인정보 동의 필드
+        };
+        
+        // 필드 노출 및 필수 여부 적용 함수
+        function applyFieldSettings() {
+            // 각 필드에 대해 노출 여부 및 필수 여부 설정
+            for (const fieldId in fieldSettings) {
+                const fieldElement = document.getElementById(fieldId);
+                
+                if (!fieldElement) continue;
+                
+                if (fieldSettings[fieldId]) {
+                    // 필드 표시
+                    fieldElement.classList.remove('hidden');
+                    
+                    // 필드 내부의 input/select/textarea 요소 찾기
+                    const labelElement = fieldElement.querySelector('label');
+                    const inputElement = fieldElement.querySelector('input, select, textarea');
+                    
+                    if (requiredSettings[fieldId] && inputElement) {
+                        // 필수 필드로 설정
+                        inputElement.setAttribute('required', 'required');
+                        if (labelElement) {
+                            labelElement.classList.add('required');
+                        }
+                    } else if (inputElement) {
+                        // 선택 필드로 설정
+                        inputElement.removeAttribute('required');
+                        if (labelElement) {
+                            labelElement.classList.remove('required');
+                        }
+                    }
+                } else {
+                    // 필드 숨김
+                    fieldElement.classList.add('hidden');
+                    
+                    // 숨김 필드의 input/select/textarea에서 required 속성 제거
+                    const inputElement = fieldElement.querySelector('input, select, textarea');
+                    if (inputElement) {
+                        inputElement.removeAttribute('required');
+                    }
+                }
+            }
+        }
+        
+        // 페이지 로드 시 설정 적용
+        document.addEventListener('DOMContentLoaded', function() {
+            applyFieldSettings();
+            
+            // 주소 검색 관련 요소
+            const addressInput = document.getElementById('address');
+            const addressDetailInput = document.getElementById('addressDetail');
+            const addressContainer = document.getElementById('addressContainer');
+            
+            // 주소 입력란 클릭 이벤트 (주소 필드가 표시되는 경우에만)
+            if (addressInput && fieldSettings.addressField) {
+                addressInput.addEventListener('click', function(event) {
+                    // 이벤트 전파 방지 (클릭 이벤트가 document까지 전파되지 않도록)
+                    event.stopPropagation();
+                    
+                    // 기본주소 입력란 숨기기
+                    addressInput.style.display = 'none';
+                    
+                    // 주소 검색 컨테이너 표시
+                    addressContainer.style.display = 'block';
+                    
+                    // 주소 검색 컴포넌트 삽입
+                    new daum.Postcode({
+                        oncomplete: function(data) {
+                            // 도로명 주소를 사용하고, 지번 주소가 있는 경우 괄호에 추가
+                            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택한 경우
+                                addressInput.value = data.roadAddress;
+                            } else { // 사용자가 지번 주소를 선택한 경우
+                                addressInput.value = data.jibunAddress;
+                            }
+                            
+                            // 주소 검색 컨테이너 숨김
+                            addressContainer.style.display = 'none';
+                            
+                            // 기본주소 입력란 다시 표시
+                            addressInput.style.display = 'block';
+                            
+                            // 상세주소 필드가 표시되는 경우에만 포커스 이동
+                            if (fieldSettings.addressDetailField && addressDetailInput) {
+                                addressDetailInput.focus();
+                            }
+                            
+                            // 이벤트 리스너 제거
+                            document.removeEventListener('click', handleClickOutside);
+                            document.removeEventListener('focusin', handleClickOutside);
+                        },
+                        width: '100%',
+                        height: '100%'
+                    }).embed(addressContainer);
+                    
+                    // 다음 이벤트 사이클에서 이벤트 리스너 등록 (즉시 등록하면 현재 클릭 이벤트에 반응)
+                    setTimeout(() => {
+                        document.addEventListener('click', handleClickOutside);
+                        document.addEventListener('focusin', handleClickOutside);
+                    }, 0);
+                });
+                
+                // 주소 검색 컨테이너 클릭 시 이벤트 전파 방지
+                addressContainer.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+            }
+            
+            // 주소창 외부 클릭 처리 핸들러
+            function handleClickOutside(event) {
+                // 클릭된 요소가 주소 컨테이너나 주소 입력란이 아닌지 확인
+                if (addressContainer.style.display === 'block' && 
+                    !addressContainer.contains(event.target) && 
+                    event.target !== addressInput) {
+                    
+                    // 주소 검색 컨테이너 숨김
+                    addressContainer.style.display = 'none';
+                    
+                    // 기본주소 입력란 다시 표시
+                    addressInput.style.display = 'block';
+                    
+                    // 이벤트 리스너 제거
+                    document.removeEventListener('click', handleClickOutside);
+                    document.removeEventListener('focusin', handleClickOutside);
+                }
+            }
+            
+            // 폼 제출 이벤트
+            const form = document.getElementById('inquiryForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // 폼 제출 시 선택된 옵션 수집
+                    const selectedOptions = [];
+                    document.querySelectorAll('input[name="options[]"]:checked').forEach(function(checkbox) {
+                        selectedOptions.push(checkbox.value);
+                    });
+                    
+                    const formData = new FormData(this);
+                    const formObject = {};
+
+                    formObject.selectedOptions = selectedOptions;
+                    
+                    formData.forEach((value, key) => {
+                        formObject[key] = value;
+                    });
+                    
+                    console.log('제출된 데이터:', formObject);
+                    
+                    // 성공 메시지 표시
+                    alert('문의가 성공적으로 접수되었습니다. 감사합니다.');
+                    this.reset();
+                    
+                    // 주소 관련 필드 초기화
+                    if (addressInput) addressInput.value = '';
+                    if (addressDetailInput) addressDetailInput.value = '';
+                    if (addressContainer) addressContainer.style.display = 'none';
+                });
+            }
+
+            const privacyPolicyLink = document.getElementById('privacyPolicyLink');
+            const privacyPolicySection = document.getElementById('privacyPolicySection');
+            
+            if (privacyPolicyLink && privacyPolicySection) {
+                privacyPolicyLink.addEventListener('click', function(e) {
+                    e.preventDefault(); // 기본 링크 동작 방지
+                    
+                    // 개인정보 처리방침 섹션 토글
+                    const isVisible = privacyPolicySection.style.display === 'block';
+                    privacyPolicySection.style.display = isVisible ? 'none' : 'block';
+                    
+                    // 표시할 때만 스크롤
+                    if (!isVisible) {
+                        // 부드러운 스크롤로 처리방침 섹션으로 이동
+                        privacyPolicySection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
