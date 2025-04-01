@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글쓰기</title>
+  <style>
+    /* 전체 스타일 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    }
+    
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* 헤더 스타일 */
+    .header {
+      margin-bottom: 20px;
+    }
+    
+    .header h1 {
+      font-size: 22px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    /* 에디터 스타일 */
+    .editor-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+    
+    .title-input {
+      width: 100%;
+      padding: 15px 20px;
+      border: none;
+      border-bottom: 1px solid #eee;
+      font-size: 18px;
+      outline: none;
+    }
+    
+    .title-input::placeholder {
+      color: #aaa;
+    }
+    
+    .toolbar {
+      display: flex;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      flex-wrap: wrap;
+    }
+    
+    .toolbar button {
+      background: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      margin: 0 2px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .toolbar .text-button {
+      width: auto;
+      padding: 0 8px;
+      font-size: 13px;
+    }
+    
+    .toolbar .icon-button svg {
+      fill: #333;
+    }
+    
+    .toolbar .icon-button:hover svg {
+      fill: #000;
+    }
+    
+    .toolbar button:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .toolbar button.active {
+      background-color: #eee;
+    }
+    
+    .font-size-select {
+      margin: 0 4px;
+      padding: 2px 4px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      background-color: white;
+      font-size: 14px;
+      height: 28px;
+      outline: none;
+    }
+    
+    .font-size-select:focus {
+      border-color: #ddd;
+    }
+    
+    .toolbar .separator {
+      width: 1px;
+      height: 24px;
+      background-color: #eee;
+      margin: 0 8px;
+    }
+    
+    .content-area {
+      min-height: 300px;
+      padding: 20px;
+      outline: none;
+      font-size: 16px;
+    }
+    
+    /* 이미지 스타일 */
+    .content-area img {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    
+    /* 비디오 스타일 */
+    .content-area video, 
+    .content-area iframe {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+    
+    /* 미디어 래퍼 스타일 */
+    .media-wrapper {
+      display: inline-block;
+      position: relative;
+      margin: 10px 0;
+      max-width: 100%;
+    }
+
+    /* 이미지/동영상 업로드 관련 */
+    #file-input, 
+    #video-file-input {
+      display: none;
+    }
+
+    /* 미디어 인디케이터 스타일 */
+    .media-uploading {
+      padding: 10px 15px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      color: #666;
+      display: inline-block;
+      margin: 5px 0;
+    }
+    
+    /* 드래그 효과 */
+    .content-area [draggable="true"] {
+      user-select: none;
+    }
+    
+    /* 저장 버튼 */
+    .save-button {
+      display: block;
+      margin: 20px 0;
+      padding: 12px 24px;
+      background-color: #4a89dc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .save-button:hover {
+      background-color: #3b7dd8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>글쓰기</h1>
+    </div>
+    
+    <div class="editor-container">
+      <input type="text" class="title-input" placeholder="제목을 입력하세요" id="title">
+      
+      <div class="toolbar">
+        <button id="bold" title="굵게"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg></button>
+        <button id="italic" title="기울임꼴"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg></button>
+        <button id="underline" title="밑줄"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path><line x1="4" y1="21" x2="20" y2="21"></line></svg></button>
+        <button id="strikethrough" title="취소선" class="icon-button">
+          <span style="text-decoration: line-through; font-weight: bold; font-size: 16px;">S</span>
+        </button>
+        
+        <div class="separator"></div>
+        
+        <select id="font-size" title="글씨 크기" class="font-size-select">
+          <option value="8">8px</option>
+          <option value="9">9px</option>
+          <option value="10">10px</option>
+          <option value="11">11px</option>
+          <option value="12" selected>12px</option>
+          <option value="13">13px</option>
+          <option value="14">14px</option>
+          <option value="16">16px</option>
+          <option value="18">18px</option>
+          <option value="20">20px</option>
+          <option value="22">22px</option>
+          <option value="24">24px</option>
+          <option value="26">26px</option>
+          <option value="30">30px</option>
+          <option value="36">36px</option>
+          <option value="48">48px</option>
+        </select>
+        
+        <div class="separator"></div>
+        
+        <button id="align-left" title="왼쪽 정렬"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"></line><line x1="15" y1="12" x2="3" y2="12"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg></button>
+        <button id="align-center" title="가운데 정렬"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"></line><line x1="18" y1="12" x2="6" y2="12"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg></button>
+        <button id="align-right" title="오른쪽 정렬"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="12" x2="9" y2="12"></line><line x1="21" y1="18" x2="7" y2="18"></line></svg></button>
+        
+        <div class="separator"></div>
+        
+        <button id="remove-format" title="서식 제거" class="icon-button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.008 4.008 0 01-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0zM4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53-4.95-4.95-4.95 4.95z"/>
+          </svg>
+        </button>
+        
+        <div class="separator"></div>
+        
+        <button id="image-button" title="이미지 삽입"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></button>
+        <button id="video-button" title="동영상 삽입"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg></button>
+        <input type="file" id="file-input" accept="image/*">
+        <input type="file" id="video-file-input" accept="video/*">
+      </div>
+      
+      <div class="content-area" id="content" contenteditable="true"></div>
+    </div>
+    
+    <button class="save-button" id="save-button">저장하기</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 요소 참조
+      const boldButton = document.getElementById('bold');
+      const italicButton = document.getElementById('italic');
+      const underlineButton = document.getElementById('underline');
+      const strikethroughButton = document.getElementById('strikethrough');
+      const fontSizeSelect = document.getElementById('font-size');
+      const alignLeftButton = document.getElementById('align-left');
+      const alignCenterButton = document.getElementById('align-center');
+      const alignRightButton = document.getElementById('align-right');
+      const removeFormatButton = document.getElementById('remove-format');
+      const imageButton = document.getElementById('image-button');
+      const fileInput = document.getElementById('file-input');
+      const videoButton = document.getElementById('video-button');
+      const videoFileInput = document.getElementById('video-file-input');
+      const contentArea = document.getElementById('content');
+      const saveButton = document.getElementById('save-button');
+      
+      // 서식 버튼 이벤트 리스너
+      boldButton.addEventListener('click', () => {
+        document.execCommand('bold', false, null);
+        contentArea.focus();
+      });
+      
+      italicButton.addEventListener('click', () => {
+        document.execCommand('italic', false, null);
+        contentArea.focus();
+      });
+      
+      underlineButton.addEventListener('click', () => {
+        document.execCommand('underline', false, null);
+        contentArea.focus();
+      });
+      
+      strikethroughButton.addEventListener('click', () => {
+        document.execCommand('strikeThrough', false, null);
+        contentArea.focus();
+      });
+      
+      fontSizeSelect.addEventListener('change', () => {
+        // 픽셀 단위로 직접 폰트 크기 설정
+        const selectedSize = fontSizeSelect.value;
+        document.execCommand('fontSize', false, '7'); // 임시 크기로 설정
+        
+        // 임시 폰트 크기를 실제 픽셀 크기로 변경
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const elements = document.querySelectorAll('font[size="7"]');
+          elements.forEach(el => {
+            el.removeAttribute('size');
+            el.style.fontSize = `${selectedSize}px`;
+          });
+        }
+        
+        contentArea.focus();
+      });
+      
+      alignLeftButton.addEventListener('click', () => {
+        document.execCommand('justifyLeft', false, null);
+        contentArea.focus();
+      });
+      
+      alignCenterButton.addEventListener('click', () => {
+        document.execCommand('justifyCenter', false, null);
+        contentArea.focus();
+      });
+      
+      alignRightButton.addEventListener('click', () => {
+        document.execCommand('justifyRight', false, null);
+        contentArea.focus();
+      });
+      
+      removeFormatButton.addEventListener('click', () => {
+        document.execCommand('removeFormat', false, null);
+        contentArea.focus();
+      });
+      
+      // 이미지 버튼 클릭 시 파일 선택 다이얼로그 열기
+      imageButton.addEventListener('click', () => {
+        fileInput.click();
+      });
+      
+      // 파일 선택 시 이미지 삽입
+      fileInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+          const file = this.files[0];
+          if (file.type.match('image.*')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.setAttribute('draggable', 'false');
+              img.setAttribute('data-is-image', 'true');
+              
+              // 삽입 함수 사용
+              insertElementAtCursor(img);
+            };
+            
+            reader.readAsDataURL(file);
+          }
+          
+          // 파일 입력 초기화 (같은 파일 다시 선택 가능하도록)
+          this.value = '';
+        }
+      });
+      
+      // 동영상 버튼 클릭 시 파일 선택 다이얼로그 열기 (간소화)
+      videoButton.addEventListener('click', () => {
+        videoFileInput.click();
+      });
+      
+      // 동영상 파일 선택 시 바로 삽입 (모달 없이)
+      videoFileInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+          const file = this.files[0];
+          if (file.type.match('video.*')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+              // 비디오 요소 생성
+              const video = document.createElement('video');
+              video.src = e.target.result;
+              video.controls = true;
+              
+              // 기본 크기 설정 (반응형)
+              video.width = 560;  // 적당한 기본 너비
+              video.style.maxWidth = '100%';
+              video.style.height = 'auto';
+              
+              // 비디오를 삽입 함수로 직접 전달 (이미지 삽입과 동일한 방식 사용)
+              insertElementAtCursor(video);
+            };
+            
+            reader.readAsDataURL(file);
+          } else {
+            alert('동영상 파일만 업로드 가능합니다.');
+          }
+          
+          // 파일 입력 초기화 (같은 파일 다시 선택 가능하도록)
+          this.value = '';
+        }
+      });
+      
+      // 현재 커서 위치에 요소 삽입하는 함수
+      function insertElementAtCursor(element) {
+        // 요소를 div로 감싸서 백스페이스로 쉽게 삭제할 수 있도록 함
+        const wrapper = document.createElement('div');
+        wrapper.className = 'media-wrapper';
+        wrapper.contentEditable = "false"; // 내부 편집 방지
+        wrapper.appendChild(element);
+        
+        // 스타일 추가
+        wrapper.style.display = 'inline-block';
+        wrapper.style.position = 'relative';
+        wrapper.style.margin = '10px 0';
+        wrapper.setAttribute('data-media-element', 'true');
+        
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          range.insertNode(wrapper);
+          
+          // 요소 뒤에 빈 텍스트 노드 추가 (선택 위치 유지)
+          const textNode = document.createTextNode('\u00A0');
+          wrapper.parentNode.insertBefore(textNode, wrapper.nextSibling);
+          
+          // 커서를 요소 뒤로 이동
+          range.setStartAfter(textNode);
+          range.setEndAfter(textNode);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else {
+          contentArea.appendChild(wrapper);
+          // 요소 뒤에 빈 텍스트 노드 추가
+          contentArea.appendChild(document.createTextNode('\u00A0'));
+        }
+        
+        contentArea.focus();
+      }
+      
+      // 저장 버튼 클릭 이벤트
+      saveButton.addEventListener('click', function() {
+        const title = document.getElementById('title').value;
+        const content = contentArea.innerHTML;
+        
+        // 콘솔에 출력 (실제로는 서버에 저장)
+        console.log({
+          title: title,
+          content: content
+        });
+        
+        alert('콘텐츠가 저장되었습니다!');
+      });
+      
+      // 에디터 내용 영역 클릭 시 포커스
+      contentArea.addEventListener('click', function() {
+        this.focus();
+      });
+      
+      // 키 이벤트 리스너 - 미디어 요소 처리
+      contentArea.addEventListener('keydown', function(e) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        
+        const range = selection.getRangeAt(0);
+        if (range.collapsed && e.key === 'Backspace') {
+          const node = range.startContainer;
+          const offset = range.startOffset;
+          
+          // 텍스트 노드일 경우 이전 형제 요소 확인
+          if (node.nodeType === Node.TEXT_NODE && offset === 0) {
+            const prevSibling = node.previousSibling;
+            
+            // 이전 요소가 미디어 래퍼인 경우
+            if (prevSibling && 
+                (prevSibling.classList && prevSibling.classList.contains('media-wrapper') || 
+                 prevSibling.getAttribute && prevSibling.getAttribute('data-media-element') === 'true')) {
+              e.preventDefault();
+              prevSibling.parentNode.removeChild(prevSibling);
+            }
+          }
+          
+          // 요소 노드일 경우
+          if (node.nodeType === Node.ELEMENT_NODE && offset === 0) {
+            const prevSibling = node.previousSibling;
+            
+            // 이전 요소가 미디어 래퍼인 경우
+            if (prevSibling && 
+                (prevSibling.classList && prevSibling.classList.contains('media-wrapper') || 
+                 prevSibling.getAttribute && prevSibling.getAttribute('data-media-element') === 'true')) {
+              e.preventDefault();
+              prevSibling.parentNode.removeChild(prevSibling);
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
