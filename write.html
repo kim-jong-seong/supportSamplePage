@@ -229,12 +229,12 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">
+    <!--<div class="header">
       <h1>글쓰기</h1>
-    </div>
+    </div>-->
     
     <div class="editor-container">
-      <input type="text" class="title-input" placeholder="제목을 입력하세요" id="title">
+      <input type="text" class="title-input" placeholder="제목을 입력하세요" id="title" autocomplete="off">
       
       <div class="toolbar">
         <button id="bold" title="굵게"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg></button>
@@ -488,7 +488,7 @@
           content: content
         });
         
-        alert('콘텐츠가 저장되었습니다!');
+        alert('등록되었습니다!');
       });
       
       // 에디터 내용 영역 클릭 시 포커스
