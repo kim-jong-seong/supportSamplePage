@@ -1,0 +1,25 @@
+BOARD
+ BOARD_NO		게시번호
+ USER			유저
+ PASSWORD		비밀번호
+ TITLE			제목
+ CTNT			내용
+ INPT_DTTM
+ INPT_IP
+ MOD_DTTM
+ MOD_IP
+
+INQUIRY_HISTORY
+ APLY_NO		신청번호
+ NAME			이름
+ TEL_NO			연락처
+ ADDRESS		주소
+ DETAIL_ADDRESS		상세주소
+ OPTION			옵션
+ SERVICE			서비스종류
+ CTNT			내용
+ PRIVACY_CONSENT_YN	개인정보수집이용동의
+ INPT_DTTM
+ INPT_IP
+ MOD_DTTM
+ MOD_IP
